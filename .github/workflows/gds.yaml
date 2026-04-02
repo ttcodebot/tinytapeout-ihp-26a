@@ -114,7 +114,10 @@ jobs:
 
       - name: Generate fill and add logo
         working-directory: fill
-        run: make fill KLAYOUT_CMD=/usr/bin/klayout -j2
+        run: |
+          export SYSTEM_PYTHON=$(which python3)
+          nix profile install nixpkgs#magic-vlsi
+          nix-shell $GITHUB_WORKSPACE/librelane/shell.nix --run "make fill KLAYOUT_CMD=/usr/bin/klayout SYSTEM_PYTHON=$SYSTEM_PYTHON -j2"
 
       - name: Rename top-level cell for IHP submission, convert to OAS
         run: |
